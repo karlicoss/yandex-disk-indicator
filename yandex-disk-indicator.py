@@ -1069,6 +1069,10 @@ class Preferences(Gtk.Dialog):  # Preferences window of application and daemons
         self.dconfig.changed = True
       dialog.destroy()
 
+  def reloadDaemon(self, widget, parent, dcofig):
+    self.daemon.stop()
+    self.daemon.start()
+
   def __init__(self, widget):
     global config, indicators, logo
     # Preferences Window routine
@@ -1137,6 +1141,11 @@ class Preferences(Gtk.Dialog):  # Preferences window of application and daemons
       exListButton.set_tooltip_text(_("Folders in the list will not be synchronized."))
       exListButton.connect("clicked", self.excludeDirsList, self, i.config)
       framedBox.add(exListButton)
+
+      reloadDaemonButton = Gtk.Button(_('Reload daemon'))
+      reloadDaemonButton.set_tooltip_text(_("Restart daemon to apply changes."))
+      reloadDaemonButton.connect("clicked", self.reloadDaemon, self, i.config)
+      framedBox.add(reloadDaemonButton)
       # --- End of Daemon start options tab --- add it to notebook
       pref_notebook.append_page(optionsBox, Gtk.Label(_('Daemon %soptions') % i.ID))
     self.show_all()
